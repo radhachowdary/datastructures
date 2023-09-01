@@ -1,0 +1,38 @@
+//*2D ARRAY*//
+#include <stdio.h>
+void rotateMatrix(int matrix[][100], int size) {
+    int temp[size][size];
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            temp[j][size - 1 - i] = matrix[i][j];
+        }
+    }
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            matrix[i][j] = temp[i][j];
+        }
+    }
+}
+int main() {
+    int size;
+    printf("Enter the size of the matrix: ");
+    scanf("%d", &size);
+    int matrix[100][100];
+    printf("Enter %d x %d matrix elements:\n", size, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            printf("Element (%d, %d): ", i + 1, j + 1);
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+    rotateMatrix(matrix, size);
+    printf("Rotated matrix:\n");
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
