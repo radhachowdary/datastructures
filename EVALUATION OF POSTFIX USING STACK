@@ -1,0 +1,80 @@
+//* program to evaluate the postfix notation using stack*//
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_STACK_SIZE 100
+struct Stack {
+ int top;
+ int data[MAX_STACK_SIZE];
+};
+void initialize(struct Stack *stack) {
+ stack->top = -1;
+}
+int isEmpty(struct Stack *stack) {
+ return stack->top == -1;
+}
+void push(struct Stack *stack, int value) {
+ if (stack->top == MAX_STACK_SIZE - 1) {
+ printf("Stack Overflow\n");
+ exit(1); 
+ }
+ stack->data[++(stack->top)] = value;
+}
+int pop(struct Stack *stack) {
+ if (isEmpty(stack)) {
+ printf("Stack Underflow\n");
+ exit(1); 
+ }
+ return stack->data[(stack->top)--];
+}
+int evaluatePostfix(char postfix[]) {
+ struct Stack stack;
+ initialize(&stack);
+ int i, operand1, operand2;
+ for (i = 0; postfix[i] != '\0'; i++) {
+ char ch = postfix[i];
+ if (isdigit(ch)) {
+ push(&stack, ch - '0'); 
+ } else {
+ operand2 = pop(&stack);
+ operand1 = pop(&stack);
+ switch (ch) {
+ case '+':
+ push(&stack, operand1 + operand2);
+ break;
+ case '-':
+ push(&stack, operand1 - operand2);
+ break;
+ case '*':
+ push(&stack, operand1 * operand2);
+ break;
+ case '/':
+ if (operand2 != 0) {
+ push(&stack, operand1 / operand2);
+ } else {
+ printf("Division by zero\n");
+ exit(1); 
+ }
+ break;
+ default:
+ printf("Invalid operator in postfix expression\n");
+ exit(1); 
+ }
+ }
+ }
+ if (!isEmpty(&stack)) {
+ return pop(&stack);
+ } else {
+ printf("Postfix expression is empty\n");
+ exit(1); 
+ }
+}
+int main() {
+ char postfix[MAX_STACK_SIZE];
+ printf("Enter a postfix expression: ");
+ gets(postfix); 
+ int result = evaluatePostfix(postfix);
+ printf("Result: %d\n", result);
+ return 0;
+}
