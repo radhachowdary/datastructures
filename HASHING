@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+typedef struct {
+ int *arr;
+ int size; 
+ int count; 
+ int *indexMap;
+} RandomizedSet;
+RandomizedSet *randomizedSetCreate() {
+ RandomizedSet *set = (RandomizedSet *)malloc(sizeof(RandomizedSet));
+ set->size = 1000;
+ set->count = 0;
+ set->arr = (int *)malloc(sizeof(int) * set->size);
+ set->indexMap = (int *)malloc(sizeof(int) * set->size);
+ memset(set->indexMap, -1, sizeof(int) * set->size);
+ return set;
+}
+bool randomizedSetInsert(RandomizedSet *obj, int val) {
+ if (obj == NULL) return false;
+ if (obj->indexMap[val] != -1)
+ return false;
+ if (obj->count == obj->size) {
+ obj->size *= 2;
+ obj->arr = (int *)realloc(obj->arr, sizeof(int) * obj->size);
+ }
+ obj->arr[obj->count] = val;
+ // Update the index map
+ obj->indexMap[val] = obj->count;
+ obj->count++;
+ return true;
+}
+bool randomizedSetRemove(RandomizedSet *obj, int val) {
+ if (obj == NULL) return false;
+ // Check if the element is present
+ if (obj->indexMap[val] == -1)
+ return false;
+ int lastIndex = obj->count - 1;
+ int lastElement = obj->arr[lastIndex];
+ int indexToRemove = obj->indexMap[val];
+ obj->arr[indexToRemove] = lastElement;
+ obj->indexMap[lastElement] = indexToRemove;
+ obj->indexMap[val] = -1;
+ obj->count--;
+ return true;
+}
+int randomizedSetGetRandom(RandomizedSet *obj) {
+ if (obj == NULL) return -1;
+ int randomIndex = rand() % obj->count;
+ return obj->arr[randomIndex];
+}
+void randomizedSetFree(RandomizedSet *obj) {
+ if (obj != NULL) {
+ free(obj->arr);
+ free(obj->indexMap);
+ free(obj);
+ }
+}
+int main() {
+ RandomizedSet *obj = randomizedSetCreate();
+ randomizedSetInsert(obj, 1);
+ randomizedSetInsert(obj, 2);
+ randomizedSetInsert(obj, 3);
+ printf("Random element: %d\n", randomizedSetGetRandom(obj));
+ randomizedSetRemove(obj, 2);
+ printf("Random element: %d\n", randomizedSetGetRandom(obj));
+ randomizedSetFree(obj);
+ return 0;
+}
