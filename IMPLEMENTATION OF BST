@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+  int data;
+  struct Node *left, *right;
+};
+struct Node* newNode(int data) {
+  struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+  node->data = data;
+  node->left = node->right = NULL;
+  return node;
+}
+struct Node* insert(struct Node* root, int data) {
+  if (root == NULL) {
+    return newNode(data);
+  }
+  if (data < root->data)
+    root->left = insert(root->left, data);
+  else
+    root->right = insert(root->right, data);  
+  return root;
+}
+void preorder(struct Node* root) {
+  if (root == NULL) return;
+  printf("%d ", root->data);
+  preorder(root->left);  
+  preorder(root->right);
+}
+void inorder(struct Node* root) {
+  if (root == NULL) return;
+  inorder(root->left);
+  printf("%d ", root->data);
+  inorder(root->right);
+} 
+void postorder(struct Node* root) {
+  if (root == NULL) return;
+  postorder(root->left);
+  postorder(root->right);
+  printf("%d ", root->data);
+}
+struct Node* search(struct Node* root, int data) {
+  if (root == NULL || root->data == data) 
+    return root;
+  if (data < root->data)    
+    return search(root->left, data);
+  return search(root->right, data);  
+}
+struct Node* findMin(struct Node* root) {
+  while (root->left != NULL) 
+    root = root->left;
+  return root;
+}
+struct Node* findMax(struct Node* root) {
+  while (root->right != NULL)   
+    root = root->right;
+  return root;  
+}
+int height(struct Node* root) {
+  if (root == NULL)
+    return 0;
+  int lh = height(root->left);
+  int rh = height(root->right);
+  return (lh > rh)? lh+1 : rh+1;
+}
+int main() {
+  struct Node* root = NULL;
+  root = insert(root, 15);
+  insert(root, 10);
+  insert(root, 20);
+  insert(root, 25);
+  preorder(root);
+  printf("\n");
+  inorder(root);
+  struct Node* min = findMin(root);
+  printf("\nMin: %d", min->data);
+  struct Node* max = findMax(root);
+  printf("\nMax: %d", max->data);
+  int h = height(root);
+  printf("\nHeight: %d", h);
+  return 0;
+}
