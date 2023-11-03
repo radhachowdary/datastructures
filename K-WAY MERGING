@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+void kWayMerge(int k, int *arr[], int n[], int output[]) {
+  int *indices = malloc(sizeof(int) * k);
+  int i, minIndex, minValue;
+  for(i=0; i<k; i++) {
+    indices[i] = 0; 
+  }
+  for(i=0; i<n[0]+n[1]+...+n[k-1]; i++) {
+    minValue = INT_MAX;
+    minIndex = -1;
+    for(int j=0; j<k; j++) {
+      if(indices[j] < n[j] && arr[j][indices[j]] < minValue) {
+        minValue = arr[j][indices[j]];
+        minIndex = j;
+      }
+    }
+    if(minIndex != -1) {
+      output[i] = arr[minIndex][indices[minIndex]];
+      indices[minIndex]++; 
+    }
+  }
+  free(indices);
+}
+int main() {
+  int k = 3;
+  int arr1[] = {1, 3, 5, 7};
+  int n1 = sizeof(arr1)/sizeof(arr1[0]);
+  int arr2[] = {2, 4, 6, 8};
+  int n2 = sizeof(arr2)/sizeof(arr2[0]);
+  int arr3[] = {0, 9, 10, 11};
+  int n3 = sizeof(arr3)/sizeof(arr3[0]);
+  int *arr[] = {arr1, arr2, arr3};
+  int n[] = {n1, n2, n3};
+  int output[n1+n2+n3];
+  kWayMerge(k, arr, n, output);
+  for(i=0; i<n1+n2+n3; i++)
+    printf("%d ", output[i]);
+  return 0;
+}
